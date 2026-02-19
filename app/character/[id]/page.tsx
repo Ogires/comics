@@ -46,27 +46,19 @@ export default function CharacterPage() {
 
       {character.issue_credits.length > 0 && (
         <>
-          <h2 className="text-xl font-semibold text-slate-100 mb-4">{t('character.issuesTitle')}</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <h2 className="text-xl font-semibold text-slate-100 mb-4">
+            {t('character.issuesTitle')} ({character.issue_credits.length})
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
             {character.issue_credits.map((issue) => (
               <Link
                 key={issue.id}
                 href={`/issue/${issue.id}`}
-                className="block bg-slate-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-red-500 transition-all"
+                className="block bg-slate-800 rounded-lg px-3 py-2 hover:ring-2 hover:ring-red-500 transition-all"
               >
-                <div className="relative aspect-[2/3]">
-                  <Image
-                    src={issue.image?.medium_url || '/placeholder.png'}
-                    alt={issue.name || `#${issue.issue_number}`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-2">
-                  <p className="text-xs text-slate-300 truncate">
-                    {issue.name || `#${issue.issue_number}`}
-                  </p>
-                </div>
+                <p className="text-sm text-slate-300 truncate">
+                  {issue.name || `Issue #${issue.id}`}
+                </p>
               </Link>
             ))}
           </div>
