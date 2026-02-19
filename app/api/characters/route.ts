@@ -23,18 +23,11 @@ export async function GET(request: NextRequest) {
       next: { revalidate: 300 },
     })
     if (!response.ok) {
-      const text = await response.text()
-      return NextResponse.json(
-        { error: 'Comic Vine API error', status: response.status, body: text.slice(0, 500) },
-        { status: 502 },
-      )
+      return NextResponse.json({ error: 'Comic Vine API error' }, { status: 502 })
     }
     const data = await response.json()
     return NextResponse.json(data)
-  } catch (err) {
-    return NextResponse.json(
-      { error: 'Comic Vine API unavailable', message: String(err) },
-      { status: 502 },
-    )
+  } catch {
+    return NextResponse.json({ error: 'Comic Vine API unavailable' }, { status: 502 })
   }
 }
