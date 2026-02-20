@@ -2,10 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle } from 'lucide-react'
+import { Search, AlertCircle } from 'lucide-react'
 import IssueSearchCard from '@/components/IssueSearchCard'
 import Pagination from '@/components/Pagination'
-import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { searchIssues } from '@/lib/api'
 import type { IssueSummary } from '@/types'
@@ -66,40 +65,65 @@ export default function IssuesPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-red-500 mb-6">{t('issues.title')}</h1>
-      <Input
-        type="search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder={t('issues.placeholder')}
-        aria-label={t('issues.placeholder')}
-        className="max-w-xl bg-slate-800 border-slate-600 text-slate-100 placeholder:text-slate-400 focus-visible:ring-red-500 mb-6"
-      />
+      <h1 className="text-3xl font-bold gradient-text-accent mb-6">{t('issues.title')}</h1>
+
+      <div className="relative max-w-xl mb-6">
+        <div className="relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-foreground transition-colors duration-200" />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t('issues.placeholder')}
+            aria-label={t('issues.placeholder')}
+            className="w-full h-12 pl-11 pr-4 bg-white/[0.04] border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500/30 transition-all duration-200 text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Status */}
+      <div className="flex items-center justify-between mb-6 min-h-[24px]">
+        {!loading && total > 0 && (
+          <p className="text-sm text-muted-foreground font-mono animate-fade-in" role="status" aria-live="polite">
+            {t('common.results', { count: total })}
+          </p>
+        )}
+        {loading && (
+          <div className="flex items-center gap-2.5">
+            <div className="w-3.5 h-3.5 rounded-full border-2 border-red-500/60 border-t-transparent animate-spin" />
+            <p className="text-sm text-muted-foreground">{t('issues.searching')}</p>
+          </div>
+        )}
+      </div>
+
       {error ? (
-        <Alert variant="destructive" className="mb-4">
+        <Alert variant="destructive" className="mb-6">
           <AlertCircle className="size-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       ) : null}
-      {loading ? (
-        <p className="text-slate-300 mb-4" role="status" aria-live="polite">{t('issues.searching')}</p>
-      ) : null}
-      {!loading && total > 0 ? (
-        <p className="text-slate-300 text-sm mb-4" role="status" aria-live="polite">
-          {t('common.results', { count: total })}
-        </p>
-      ) : null}
+
       {!loading && !error && issues.length === 0 && query.trim().length === 0 ? (
-        <p className="text-slate-300">{t('issues.noQuery')}</p>
+        <p className="text-muted-foreground">{t('issues.noQuery')}</p>
       ) : null}
       {!loading && !error && issues.length === 0 && query.trim().length > 0 ? (
-        <p className="text-slate-300">{t('common.noResults')}</p>
+        <div className="text-center py-16">
+          <p className="text-muted-foreground">{t('common.noResults')}</p>
+        </div>
       ) : null}
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {issues.map((issue) => (
-          <IssueSearchCard key={issue.id} issue={issue} />
+        {issues.map((issue, i) => (
+          <div
+            key={issue.id}
+            className="animate-slide-up"
+            style={{ animationDelay: `${Math.min(i * 30, 400)}ms` }}
+          >
+            <IssueSearchCard issue={issue} />
+          </div>
         ))}
       </div>
+
       {totalPages > 1 && query.trim().length > 0 ? (
         <Pagination
           currentPage={page}

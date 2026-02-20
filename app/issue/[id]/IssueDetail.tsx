@@ -46,7 +46,7 @@ export default function IssueDetail({ issue, userId }: Props) {
     : null
 
   return (
-    <div>
+    <div className="animate-fade-in">
       {/* Navigation */}
       <div className="flex items-center gap-2 mb-4">
         <BackButton />
@@ -58,35 +58,35 @@ export default function IssueDetail({ issue, userId }: Props) {
 
       {/* Header: Cover + Info */}
       <div className="flex flex-col sm:flex-row gap-6 mb-8">
-        <div className="relative w-48 shrink-0 aspect-[2/3]">
+        <div className="relative w-48 shrink-0 aspect-[2/3] rounded-xl overflow-hidden border border-border/50">
           <Image
             src={issue.image.super_url || issue.image.medium_url || '/placeholder.png'}
             alt={issueTitle}
             fill
             sizes="192px"
-            className="object-cover rounded-lg"
+            className="object-cover"
           />
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="text-3xl font-bold text-red-500 mb-1">{issueTitle}</h1>
+          <h1 className="text-3xl font-bold gradient-text-accent mb-1">{issueTitle}</h1>
           {issue.volume && (
-            <p className="text-slate-300 text-sm">
+            <p className="text-muted-foreground text-sm">
               {t('issue.series')}: {issue.volume.name}
             </p>
           )}
           {issue.cover_date && (
-            <p className="text-slate-300 text-sm">
-              {t('issue.published')}: {issue.cover_date}
+            <p className="text-muted-foreground text-sm">
+              {t('issue.published')}: <span className="font-mono">{issue.cover_date}</span>
             </p>
           )}
           {issue.store_date && issue.store_date !== issue.cover_date && (
-            <p className="text-slate-300 text-sm">
-              {t('issue.storeDate')}: {issue.store_date}
+            <p className="text-muted-foreground text-sm">
+              {t('issue.storeDate')}: <span className="font-mono">{issue.store_date}</span>
             </p>
           )}
 
           {issue.deck && (
-            <p className="text-slate-300 leading-relaxed mt-3">{issue.deck}</p>
+            <p className="text-muted-foreground leading-relaxed mt-3">{issue.deck}</p>
           )}
 
           {userId ? (
@@ -99,8 +99,8 @@ export default function IssueDetail({ issue, userId }: Props) {
               />
             </div>
           ) : (
-            <p className="text-slate-300 text-sm mt-3">
-              <Link href="/login" className="text-red-400 hover:underline">
+            <p className="text-muted-foreground text-sm mt-3">
+              <Link href="/login" className="text-red-400 hover:text-red-300 hover:underline transition-colors">
                 {t('issue.loginPrompt')}
               </Link>
             </p>
@@ -113,13 +113,13 @@ export default function IssueDetail({ issue, userId }: Props) {
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('issue.creativeTeam')}
             </h2>
-            <div className="space-y-1 text-sm text-slate-300">
+            <div className="space-y-1 text-sm text-muted-foreground">
               {Array.from(roleGroups.entries()).map(([role, names]) => (
                 <p key={role}>
-                  <span className="text-slate-400 capitalize">{role}:</span>{' '}
+                  <span className="text-muted-foreground/70 capitalize">{role}:</span>{' '}
                   {names.join(', ')}
                 </p>
               ))}
@@ -133,17 +133,17 @@ export default function IssueDetail({ issue, userId }: Props) {
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('issue.description')}
             </h2>
-            <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
               {displayedDescription}
             </p>
             {descNeedsTruncation && (
               <Button
                 variant="link"
                 onClick={() => setShowFullDescription(!showFullDescription)}
-                className="mt-1 p-0 h-auto text-sm text-red-400"
+                className="mt-1 p-0 h-auto text-sm text-red-400 hover:text-red-300"
               >
                 {showFullDescription ? t('issue.readLess') : t('issue.readMore')}
               </Button>
@@ -157,16 +157,16 @@ export default function IssueDetail({ issue, userId }: Props) {
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('issue.characters')}
             </h2>
             <div className="text-sm">
               {issue.character_credits.map((char, i) => (
                 <span key={char.id}>
-                  {i > 0 && <span className="text-slate-600"> | </span>}
+                  {i > 0 && <span className="text-border"> | </span>}
                   <Link
                     href={`/character/${char.id}`}
-                    className="text-red-400 hover:underline"
+                    className="text-red-400 hover:text-red-300 hover:underline transition-colors"
                   >
                     {char.name}
                   </Link>
@@ -183,17 +183,17 @@ export default function IssueDetail({ issue, userId }: Props) {
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('issue.firstAppearances')}
             </h2>
             {issue.first_appearance_characters && issue.first_appearance_characters.length > 0 && (
               <div className="text-sm mb-2">
                 {issue.first_appearance_characters.map((char, i) => (
                   <span key={char.id}>
-                    {i > 0 && <span className="text-slate-600"> | </span>}
+                    {i > 0 && <span className="text-border"> | </span>}
                     <Link
                       href={`/character/${char.id}`}
-                      className="text-yellow-400 hover:underline"
+                      className="text-yellow-400 hover:text-yellow-300 hover:underline transition-colors"
                     >
                       &#11088; {char.name}
                     </Link>
@@ -204,7 +204,7 @@ export default function IssueDetail({ issue, userId }: Props) {
             {issue.first_appearance_teams && issue.first_appearance_teams.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {issue.first_appearance_teams.map((team) => (
-                  <Badge key={team.id} variant="outline" className="border-yellow-500 text-yellow-400">
+                  <Badge key={team.id} variant="outline" className="border-yellow-500/50 text-yellow-400">
                     &#11088; {team.name}
                   </Badge>
                 ))}
@@ -219,7 +219,7 @@ export default function IssueDetail({ issue, userId }: Props) {
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('issue.teams')}
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -238,7 +238,7 @@ export default function IssueDetail({ issue, userId }: Props) {
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('issue.storyArcs')}
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -257,7 +257,7 @@ export default function IssueDetail({ issue, userId }: Props) {
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('issue.locations')}
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -276,7 +276,7 @@ export default function IssueDetail({ issue, userId }: Props) {
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('issue.concepts')}
             </h2>
             <div className="flex flex-wrap gap-2">

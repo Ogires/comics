@@ -2,10 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle } from 'lucide-react'
+import { Search, AlertCircle } from 'lucide-react'
 import CharacterCard from '@/components/CharacterCard'
 import Pagination from '@/components/Pagination'
-import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { searchCharacters } from '@/lib/api'
 import type { CharacterSummary } from '@/types'
@@ -59,35 +58,77 @@ export default function HomePage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-red-500 mb-6">{t('home.title')}</h1>
-      <Input
-        type="search"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder={t('home.placeholder')}
-        aria-label={t('home.placeholder')}
-        className="max-w-xl bg-slate-800 border-slate-600 text-slate-100 placeholder:text-slate-400 focus-visible:ring-red-500 mb-6"
-      />
+      {/* Hero */}
+      <div className="relative pt-8 sm:pt-12 pb-2 mb-6">
+        {/* Ambient glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-red-500/[0.04] rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="relative text-center mb-8">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight gradient-text">
+            {t('home.title')}
+          </h1>
+        </div>
+
+        {/* Search */}
+        <div className="relative max-w-xl mx-auto">
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-foreground transition-colors duration-200" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t('home.placeholder')}
+              aria-label={t('home.placeholder')}
+              className="w-full h-12 pl-11 pr-4 bg-white/[0.04] border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-500/30 transition-all duration-200 text-sm"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Status */}
+      <div className="flex items-center justify-between mb-6 min-h-[24px]">
+        {!loading && total > 0 && (
+          <p className="text-sm text-muted-foreground font-mono animate-fade-in" role="status" aria-live="polite">
+            {t('common.results', { count: total })}
+          </p>
+        )}
+        {loading && (
+          <div className="flex items-center gap-2.5">
+            <div className="w-3.5 h-3.5 rounded-full border-2 border-red-500/60 border-t-transparent animate-spin" />
+            <p className="text-sm text-muted-foreground">{t('home.searching')}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Error */}
       {error && (
-        <Alert variant="destructive" className="mb-4">
+        <Alert variant="destructive" className="mb-6">
           <AlertCircle className="size-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-      {loading && <p className="text-slate-300 mb-4">{t('home.searching')}</p>}
-      {!loading && total > 0 && (
-        <p className="text-slate-300 text-sm mb-4" role="status" aria-live="polite">
-          {t('common.results', { count: total })}
-        </p>
-      )}
+
+      {/* No results */}
       {!loading && !error && characters.length === 0 && query.length > 0 && (
-        <p className="text-slate-300">{t('common.noResults')}</p>
+        <div className="text-center py-16">
+          <p className="text-muted-foreground">{t('common.noResults')}</p>
+        </div>
       )}
+
+      {/* Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {characters.map((c) => (
-          <CharacterCard key={c.id} character={c} />
+        {characters.map((c, i) => (
+          <div
+            key={c.id}
+            className="animate-slide-up"
+            style={{ animationDelay: `${Math.min(i * 30, 400)}ms` }}
+          >
+            <CharacterCard character={c} />
+          </div>
         ))}
       </div>
+
+      {/* Pagination */}
       {totalPages > 1 && (
         <Pagination
           currentPage={page}

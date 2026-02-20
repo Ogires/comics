@@ -66,10 +66,15 @@ function LoginForm() {
   }
 
   return (
-    <div className="max-w-sm mx-auto mt-16">
-      <h1 className="text-2xl font-bold text-slate-100 mb-6">
-        {isRegister ? t('auth.register') : t('auth.signIn')}
-      </h1>
+    <div className="max-w-sm mx-auto mt-16 animate-fade-in">
+      <div className="text-center mb-8">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-sm font-bold mx-auto mb-4 shadow-lg shadow-red-500/20">
+          CE
+        </div>
+        <h1 className="text-2xl font-bold text-foreground">
+          {isRegister ? t('auth.register') : t('auth.signIn')}
+        </h1>
+      </div>
       {error && (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="size-4" />
@@ -78,37 +83,37 @@ function LoginForm() {
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">{t('auth.email')}</Label>
+          <Label htmlFor="email" className="text-sm text-muted-foreground">{t('auth.email')}</Label>
           <Input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="bg-slate-800 border-slate-600 text-slate-100 focus-visible:ring-red-500"
+            className="bg-white/[0.04] border-border text-foreground focus-visible:ring-red-500/30 focus-visible:border-red-500/30 h-11"
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password">{t('auth.password')}</Label>
+          <Label htmlFor="password" className="text-sm text-muted-foreground">{t('auth.password')}</Label>
           <Input
             id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="bg-slate-800 border-slate-600 text-slate-100 focus-visible:ring-red-500"
+            className="bg-white/[0.04] border-border text-foreground focus-visible:ring-red-500/30 focus-visible:border-red-500/30 h-11"
           />
           {isRegister && (
             <div className="mt-2 space-y-1">
-              <p className="text-xs font-medium text-slate-400">
+              <p className="text-xs font-medium text-muted-foreground">
                 {t('auth.passwordRequirements')}
               </p>
               <ul className="space-y-0.5">
                 {passwordRules.map((rule) => (
                   <li
                     key={rule.key}
-                    className={`flex items-center gap-1.5 text-xs ${
-                      rule.met ? 'text-green-400' : 'text-slate-500'
+                    className={`flex items-center gap-1.5 text-xs transition-colors ${
+                      rule.met ? 'text-green-400' : 'text-muted-foreground/50'
                     }`}
                   >
                     {rule.met ? (
@@ -126,20 +131,21 @@ function LoginForm() {
         <Button
           type="submit"
           disabled={loading || (isRegister && !allRulesMet)}
-          className="w-full bg-red-600 hover:bg-red-700 text-white"
+          className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white shadow-lg shadow-red-500/20 hover:shadow-red-500/30 transition-all duration-200 h-11"
         >
           {loading
             ? (isRegister ? t('auth.registering') : t('auth.signingIn'))
             : (isRegister ? t('auth.register') : t('auth.signIn'))}
         </Button>
       </form>
-      <Button
-        variant="ghost"
-        onClick={() => setIsRegister((r) => !r)}
-        className="mt-4 text-sm text-slate-300 hover:text-slate-100"
-      >
-        {isRegister ? t('auth.switchToSignIn') : t('auth.switchToRegister')}
-      </Button>
+      <div className="text-center mt-6">
+        <button
+          onClick={() => setIsRegister((r) => !r)}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {isRegister ? t('auth.switchToSignIn') : t('auth.switchToRegister')}
+        </button>
+      </div>
     </div>
   )
 }

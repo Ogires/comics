@@ -31,7 +31,7 @@ export default function CharacterDetail({ character }: { character: Character })
       : character.description?.slice(0, BIO_TRUNCATE_LENGTH) + '…'
 
   return (
-    <div>
+    <div className="animate-fade-in">
       {/* Navigation */}
       <div className="flex items-center gap-2 mb-4">
         <BackButton />
@@ -42,20 +42,20 @@ export default function CharacterDetail({ character }: { character: Character })
 
       {/* Header: Image + Info */}
       <div className="flex flex-col sm:flex-row gap-6 mb-8">
-        <div className="relative w-48 h-48 shrink-0">
+        <div className="relative w-48 h-48 shrink-0 rounded-xl overflow-hidden border border-border/50">
           <Image
             src={character.image.super_url || character.image.medium_url || '/placeholder.png'}
             alt={character.name}
             fill
             sizes="192px"
-            className="object-cover rounded-lg"
+            className="object-cover"
           />
         </div>
         <div className="flex-1 min-w-0">
-          <h1 className="text-3xl font-bold text-red-500 mb-1">{character.name}</h1>
+          <h1 className="text-3xl font-bold gradient-text-accent mb-1">{character.name}</h1>
 
           {character.real_name && (
-            <p className="text-lg text-slate-400 italic mb-2">{character.real_name}</p>
+            <p className="text-lg text-muted-foreground italic mb-2">{character.real_name}</p>
           )}
 
           {/* Publisher / Origin badges */}
@@ -71,17 +71,17 @@ export default function CharacterDetail({ character }: { character: Character })
           )}
 
           {character.deck && (
-            <p className="text-slate-300 leading-relaxed mb-3">{character.deck}</p>
+            <p className="text-muted-foreground leading-relaxed mb-3">{character.deck}</p>
           )}
 
           {/* Meta info */}
-          <div className="space-y-1 text-sm text-slate-400">
+          <div className="space-y-1 text-sm text-muted-foreground">
             {character.first_appeared_in_issue && (
               <p>
                 {t('character.firstAppearance')}:{' '}
                 <Link
                   href={`/issue/${character.first_appeared_in_issue.id}`}
-                  className="text-red-400 hover:underline"
+                  className="text-red-400 hover:text-red-300 hover:underline transition-colors"
                 >
                   {character.first_appeared_in_issue.name ||
                     `#${character.first_appeared_in_issue.issue_number}`}
@@ -98,7 +98,7 @@ export default function CharacterDetail({ character }: { character: Character })
               character.count_of_issue_appearances > 0 && (
                 <p>
                   {t('character.appearances')}:{' '}
-                  {character.count_of_issue_appearances.toLocaleString()}{' '}
+                  <span className="font-mono">{character.count_of_issue_appearances.toLocaleString()}</span>{' '}
                   {t('character.issuesTitle').toLowerCase()}
                 </p>
               )}
@@ -111,10 +111,10 @@ export default function CharacterDetail({ character }: { character: Character })
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('character.aliases')}
             </h2>
-            <p className="text-sm text-slate-400">{aliasesList.join(', ')}</p>
+            <p className="text-sm text-muted-foreground">{aliasesList.join(', ')}</p>
           </section>
         </>
       )}
@@ -124,7 +124,7 @@ export default function CharacterDetail({ character }: { character: Character })
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('character.powers')}
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -143,7 +143,7 @@ export default function CharacterDetail({ character }: { character: Character })
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('character.teams')}
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -163,22 +163,22 @@ export default function CharacterDetail({ character }: { character: Character })
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('character.allies')} & {t('character.enemies')}
             </h2>
 
             {character.character_friends && character.character_friends.length > 0 && (
               <div className="mb-3">
-                <span className="text-sm font-medium text-slate-400">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('character.allies')}:{' '}
                 </span>
                 <span className="text-sm">
                   {character.character_friends.map((friend, i) => (
                     <span key={friend.id}>
-                      {i > 0 && <span className="text-slate-600"> | </span>}
+                      {i > 0 && <span className="text-border"> | </span>}
                       <Link
                         href={`/character/${friend.id}`}
-                        className="text-red-400 hover:underline"
+                        className="text-red-400 hover:text-red-300 hover:underline transition-colors"
                       >
                         {friend.name}
                       </Link>
@@ -190,16 +190,16 @@ export default function CharacterDetail({ character }: { character: Character })
 
             {character.character_enemies && character.character_enemies.length > 0 && (
               <div>
-                <span className="text-sm font-medium text-slate-400">
+                <span className="text-sm font-medium text-muted-foreground">
                   {t('character.enemies')}:{' '}
                 </span>
                 <span className="text-sm">
                   {character.character_enemies.map((enemy, i) => (
                     <span key={enemy.id}>
-                      {i > 0 && <span className="text-slate-600"> | </span>}
+                      {i > 0 && <span className="text-border"> | </span>}
                       <Link
                         href={`/character/${enemy.id}`}
-                        className="text-red-400 hover:underline"
+                        className="text-red-400 hover:text-red-300 hover:underline transition-colors"
                       >
                         {enemy.name}
                       </Link>
@@ -217,17 +217,17 @@ export default function CharacterDetail({ character }: { character: Character })
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+            <h2 className="text-lg font-semibold text-foreground mb-3">
               {t('character.biography')}
             </h2>
-            <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
               {displayedBio}
             </p>
             {bioNeedsTruncation && (
               <Button
                 variant="link"
                 onClick={() => setShowFullBio(!showFullBio)}
-                className="mt-1 p-0 h-auto text-sm text-red-400"
+                className="mt-1 p-0 h-auto text-sm text-red-400 hover:text-red-300"
               >
                 {showFullBio ? t('character.readLess') : t('character.readMore')}
               </Button>
@@ -241,17 +241,20 @@ export default function CharacterDetail({ character }: { character: Character })
         <>
           <Separator className="my-6" />
           <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-4">
-              {t('character.issuesTitle')} ({character.issue_credits.length})
+            <h2 className="text-lg font-semibold text-foreground mb-4">
+              {t('character.issuesTitle')}{' '}
+              <span className="text-muted-foreground font-mono text-sm font-normal">
+                ({character.issue_credits.length})
+              </span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
               {issues.map((issue) => (
                 <Link
                   key={issue.id}
                   href={`/issue/${issue.id}`}
-                  className="block bg-slate-800 rounded-lg px-3 py-2 hover:ring-2 hover:ring-red-500 transition-all"
+                  className="block bg-white/[0.03] border border-border/50 rounded-lg px-3 py-2 hover:border-border/80 hover:bg-white/[0.06] transition-all duration-200"
                 >
-                  <p className="text-sm text-slate-300 truncate">
+                  <p className="text-sm text-muted-foreground truncate">
                     {issue.name || `Issue #${issue.id}`}
                   </p>
                 </Link>
@@ -261,7 +264,7 @@ export default function CharacterDetail({ character }: { character: Character })
               <Button
                 variant="link"
                 onClick={() => setShowAll(true)}
-                className="mt-3 text-sm text-red-400"
+                className="mt-3 text-sm text-red-400 hover:text-red-300"
               >
                 {t('character.showAll', { count: character.issue_credits.length })}
               </Button>
