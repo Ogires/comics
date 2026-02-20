@@ -12,7 +12,8 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
 
   try {
     const url = buildComicVineUrl(`/character/4005-${numericId}/`, {
-      field_list: 'id,name,image,deck,issue_credits',
+      field_list:
+        'id,name,image,deck,description,real_name,aliases,publisher,origin,powers,teams,first_appeared_in_issue,creators,count_of_issue_appearances,character_friends,character_enemies,issue_credits',
     })
     const response = await fetch(url, {
       headers: { 'User-Agent': 'comics-explorer/1.0' },
@@ -24,6 +25,7 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
     const data = await response.json()
     if (data.results) {
       data.results.deck = stripHtml(data.results.deck)
+      data.results.description = stripHtml(data.results.description)
     }
     return NextResponse.json(data)
   } catch {

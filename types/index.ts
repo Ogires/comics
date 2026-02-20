@@ -13,6 +13,18 @@ export interface CharacterSummary {
 
 export interface Character extends CharacterSummary {
   deck?: string
+  description?: string
+  real_name?: string
+  aliases?: string
+  publisher?: { id: number; name: string }
+  origin?: { id: number; name: string }
+  powers?: { id: number; name: string }[]
+  teams?: { id: number; name: string }[]
+  first_appeared_in_issue?: { id: number; name: string; issue_number: string }
+  creators?: { id: number; name: string }[]
+  count_of_issue_appearances?: number
+  character_friends?: { id: number; name: string }[]
+  character_enemies?: { id: number; name: string }[]
   issue_credits: IssueSummary[]
 }
 
