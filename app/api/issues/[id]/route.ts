@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
 
   try {
     const url = buildComicVineUrl(`/issue/4000-${numericId}/`, {
-      field_list: 'id,name,issue_number,image,description,volume,cover_date,person_credits',
+      field_list: 'id,name,issue_number,image,deck,description,volume,cover_date,store_date,person_credits,character_credits,team_credits,location_credits,concept_credits,story_arc_credits,first_appearance_characters,first_appearance_teams',
     })
     const response = await fetch(url, {
       headers: { 'User-Agent': 'comics-explorer/1.0' },
@@ -23,6 +23,7 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
     }
     const data = await response.json()
     if (data.results) {
+      data.results.deck = stripHtml(data.results.deck)
       data.results.description = stripHtml(data.results.description)
     }
     return NextResponse.json(data)

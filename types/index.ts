@@ -36,10 +36,19 @@ export interface IssueSummary {
 }
 
 export interface Issue extends IssueSummary {
+  deck?: string
   description?: string
   volume?: { name: string }
   cover_date?: string
-  person_credits?: { name: string; role: string }[]
+  store_date?: string
+  person_credits?: { id: number; name: string; role: string }[]
+  character_credits?: { id: number; name: string }[]
+  team_credits?: { id: number; name: string }[]
+  location_credits?: { id: number; name: string }[]
+  concept_credits?: { id: number; name: string }[]
+  story_arc_credits?: { id: number; name: string }[]
+  first_appearance_characters?: { id: number; name: string }[]
+  first_appearance_teams?: { id: number; name: string }[]
 }
 
 export interface ComicVineListResponse<T> {

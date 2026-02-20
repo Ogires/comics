@@ -12,7 +12,7 @@ export default async function IssuePage({ params }: Props) {
   if (isNaN(numericId) || numericId <= 0) notFound()
 
   const url = buildComicVineUrl(`/issue/4000-${numericId}/`, {
-    field_list: 'id,name,issue_number,image,description,volume,cover_date,person_credits',
+    field_list: 'id,name,issue_number,image,deck,description,volume,cover_date,store_date,person_credits,character_credits,team_credits,location_credits,concept_credits,story_arc_credits,first_appearance_characters,first_appearance_teams',
   })
 
   const [issueRes, supabase] = await Promise.all([
@@ -28,6 +28,7 @@ export default async function IssuePage({ params }: Props) {
   const data = await issueRes.json()
   const issue: Issue = {
     ...data.results,
+    deck: stripHtml(data.results.deck),
     description: stripHtml(data.results.description),
   }
 
