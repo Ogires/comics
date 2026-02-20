@@ -75,6 +75,37 @@ export interface Favorite {
   created_at: string
 }
 
+// Collections
+
+export type ReadingStatus = 'pending' | 'reading' | 'read'
+
+export interface Collection {
+  id: string
+  user_id: string
+  name: string
+  description: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface CollectionItem {
+  id: string
+  collection_id: string
+  issue_id: number
+  issue_title: string | null
+  issue_thumbnail: string | null
+  reading_status: ReadingStatus
+  owned: boolean
+  added_at: string
+}
+
+export interface CollectionWithProgress extends Collection {
+  total_items: number
+  read_items: number
+  owned_items: number
+  items: CollectionItem[]
+}
+
 // Pagination
 
 export interface PaginationProps {
