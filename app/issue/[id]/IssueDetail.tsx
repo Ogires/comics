@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import BackButton from '@/components/BackButton'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import AddToCollectionModal from '@/components/AddToCollectionModal'
 import type { Issue } from '@/types'
 
 const DESC_TRUNCATE_LENGTH = 300
@@ -123,13 +124,14 @@ export default function IssueDetail({ issue, userId, initialIsFavorite }: Props)
           )}
 
           {userId ? (
-            <Button
-              onClick={toggleFavorite}
-              disabled={saving}
-              className="mt-3 self-start bg-red-600 hover:bg-red-700 text-white"
-            >
-              {saving ? t('issue.saving') : isFavorite ? t('issue.inFavorites') : t('issue.addFavorite')}
-            </Button>
+            <div className="mt-3 self-start">
+              <AddToCollectionModal
+                userId={userId}
+                issueId={issue.id}
+                issueTitle={issueTitle}
+                issueThumbnail={issue.image.super_url || issue.image.medium_url || ''}
+              />
+            </div>
           ) : (
             <p className="text-slate-300 text-sm mt-3">
               <Link href="/login" className="text-red-400 hover:underline">

@@ -45,9 +45,14 @@ export default function Navbar() {
   const navLinks = (
     <>
       {user && (
-        <Button variant="ghost" asChild onClick={() => setOpen(false)}>
-          <Link href="/favorites">{t('nav.favorites')}</Link>
-        </Button>
+        <>
+          <Button variant="ghost" asChild onClick={() => setOpen(false)}>
+            <Link href="/collections">{t('collections.title')}</Link>
+          </Button>
+          <Button variant="ghost" asChild onClick={() => setOpen(false)}>
+            <Link href="/favorites">{t('nav.favorites')}</Link>
+          </Button>
+        </>
       )}
       {user ? (
         <Button variant="ghost" onClick={handleSignOut}>

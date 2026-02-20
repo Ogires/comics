@@ -26,7 +26,8 @@ export async function middleware(request: NextRequest) {
 
   const { data: { session } } = await supabase.auth.getSession()
 
-  if (!session && request.nextUrl.pathname.startsWith('/favorites')) {
+  const protectedPaths = ['/favorites', '/collections']
+  if (!session && protectedPaths.some(p => request.nextUrl.pathname.startsWith(p))) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/login'
     redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
@@ -37,5 +38,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/favorites/:path*'],
+  matcher: ['/favorites/:path*', '/collections/:path*'],
 }
