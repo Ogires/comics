@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Navbar from '@/components/Navbar'
+import I18nProvider from '@/components/I18nProvider'
 
 export const metadata: Metadata = {
   title: 'Comics Explorer',
@@ -16,10 +17,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="bg-slate-950 text-slate-100 min-h-screen">
-        <Navbar />
-        <main className="max-w-6xl mx-auto px-4 py-8">
-          {children}
-        </main>
+        <I18nProvider>
+          <Navbar />
+          <main className="max-w-6xl mx-auto px-4 py-8">
+            {children}
+          </main>
+        </I18nProvider>
       </body>
     </html>
   )

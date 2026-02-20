@@ -1,3 +1,5 @@
+process.env.COMIC_VINE_API_KEY = 'test-api-key'
+
 import '@testing-library/jest-dom'
 import { initReactI18next } from 'react-i18next'
 import i18n from 'i18next'

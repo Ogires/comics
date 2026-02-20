@@ -4,7 +4,9 @@ type QueryParams = Record<string, string | number | undefined>
 
 export function buildComicVineUrl(path: string, params: QueryParams): string {
   const url = new URL(`${BASE_URL}${path}`)
-  url.searchParams.set('api_key', process.env.COMIC_VINE_API_KEY ?? '')
+  const apiKey = process.env.COMIC_VINE_API_KEY
+  if (!apiKey) throw new Error('COMIC_VINE_API_KEY environment variable is not set')
+  url.searchParams.set('api_key', apiKey)
   url.searchParams.set('format', 'json')
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) {

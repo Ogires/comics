@@ -3,7 +3,6 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import '@/i18n'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {

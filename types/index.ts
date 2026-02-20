@@ -12,7 +12,7 @@ export interface CharacterSummary {
 }
 
 export interface Character extends CharacterSummary {
-  deck: string
+  deck?: string
   issue_credits: IssueSummary[]
 }
 
@@ -24,10 +24,10 @@ export interface IssueSummary {
 }
 
 export interface Issue extends IssueSummary {
-  description: string
-  volume: { name: string }
-  cover_date: string
-  person_credits: { name: string; role: string }[]
+  description?: string
+  volume?: { name: string }
+  cover_date?: string
+  person_credits?: { name: string; role: string }[]
 }
 
 export interface ComicVineListResponse<T> {

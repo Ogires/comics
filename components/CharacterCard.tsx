@@ -17,6 +17,7 @@ export default function CharacterCard({ character }: Props) {
           src={character.image.medium_url || '/placeholder.png'}
           alt={character.name}
           fill
+          sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 230px"
           className="object-cover"
         />
       </div>
