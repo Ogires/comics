@@ -3,6 +3,7 @@ import type {
   ComicVineDetailResponse,
   CharacterSummary,
   Character,
+  IssueSummary,
   Issue,
 } from '@/types'
 
@@ -29,6 +30,19 @@ export async function searchCharacters(
 
 export async function fetchCharacter(id: string): Promise<ComicVineDetailResponse<Character>> {
   return apiFetch(`/api/characters/${id}`)
+}
+
+export async function searchIssues(
+  query: string,
+  limit = 20,
+  offset = 0
+): Promise<ComicVineListResponse<IssueSummary>> {
+  const params = new URLSearchParams({
+    query,
+    limit: String(limit),
+    offset: String(offset),
+  })
+  return apiFetch(`/api/issues?${params}`)
 }
 
 export async function fetchIssue(id: string): Promise<ComicVineDetailResponse<Issue>> {

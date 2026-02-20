@@ -44,6 +44,9 @@ export default function Navbar() {
 
   const navLinks = (
     <>
+      <Button variant="ghost" asChild onClick={() => setOpen(false)}>
+        <Link href="/issues">{t('nav.issues')}</Link>
+      </Button>
       {user && (
         <>
           <Button variant="ghost" asChild onClick={() => setOpen(false)}>

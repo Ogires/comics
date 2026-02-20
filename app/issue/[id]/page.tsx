@@ -34,22 +34,10 @@ export default async function IssuePage({ params }: Props) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  let initialIsFavorite = false
-  if (user) {
-    const { data: fav } = await supabase
-      .from('favorites')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('issue_id', numericId)
-      .maybeSingle()
-    initialIsFavorite = !!fav
-  }
-
   return (
     <IssueDetail
       issue={issue}
       userId={user?.id ?? null}
-      initialIsFavorite={initialIsFavorite}
     />
   )
 }

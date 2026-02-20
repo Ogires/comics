@@ -6,6 +6,7 @@ export const en = {
     langToggle: 'ES',
     home: 'Home',
     menu: 'Menu',
+    issues: 'Issues',
   },
   common: {
     loading: 'Loading\u2026',
@@ -64,6 +65,13 @@ export const en = {
     loginPrompt: 'Sign in to save favorites.',
     error: 'Could not load issue.',
   },
+  issues: {
+    title: 'Search Issues',
+    placeholder: 'Search issues\u2026',
+    searching: 'Searching\u2026',
+    noQuery: 'Type to search for issues',
+    volume: 'Volume',
+  },
   favorites: {
     title: 'My Favorites',
     empty: 'No favorites yet.',
@@ -118,6 +126,9 @@ export const en = {
     alreadyIn: 'Already in this collection',
     issuesCount: '{{count}} issue(s)',
     noIssues: 'This collection is empty. Search characters and add issues.',
+    addIssue: 'Add issue',
+    searchIssues: 'Search issues to add\u2026',
+    issueAdded: 'Issue added',
   },
   readingStatus: {
     pending: 'To read',

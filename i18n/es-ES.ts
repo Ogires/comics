@@ -6,6 +6,7 @@ export const es = {
     langToggle: 'EN',
     home: 'Inicio',
     menu: 'Men\u00fa',
+    issues: 'Issues',
   },
   common: {
     loading: 'Cargando\u2026',
@@ -64,6 +65,13 @@ export const es = {
     loginPrompt: 'Inicia sesi\u00f3n para guardar favoritos.',
     error: 'No se pudo cargar el issue.',
   },
+  issues: {
+    title: 'Buscar Issues',
+    placeholder: 'Buscar issues\u2026',
+    searching: 'Buscando\u2026',
+    noQuery: 'Escribe para buscar issues',
+    volume: 'Volumen',
+  },
   favorites: {
     title: 'Mis Favoritos',
     empty: 'Sin favoritos todav\u00eda.',
@@ -118,6 +126,9 @@ export const es = {
     alreadyIn: 'Ya est\u00e1 en esta colecci\u00f3n',
     issuesCount: '{{count}} issue(s)',
     noIssues: 'Esta colecci\u00f3n est\u00e1 vac\u00eda. Busca personajes y a\u00f1ade issues.',
+    addIssue: 'A\u00f1adir issue',
+    searchIssues: 'Buscar issues para a\u00f1adir\u2026',
+    issueAdded: 'Issue a\u00f1adido',
   },
   readingStatus: {
     pending: 'Por leer',

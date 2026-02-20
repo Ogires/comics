@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
-import { createClient } from '@/lib/supabase/client'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -18,7 +17,6 @@ const DESC_TRUNCATE_LENGTH = 300
 interface Props {
   issue: Issue
   userId: string | null
-  initialIsFavorite: boolean
 }
 
 function groupByRole(credits: { id: number; name: string; role: string }[]) {
@@ -31,41 +29,9 @@ function groupByRole(credits: { id: number; name: string; role: string }[]) {
   return map
 }
 
-export default function IssueDetail({ issue, userId, initialIsFavorite }: Props) {
+export default function IssueDetail({ issue, userId }: Props) {
   const { t } = useTranslation()
-  const [isFavorite, setIsFavorite] = useState(initialIsFavorite)
-  const [saving, setSaving] = useState(false)
   const [showFullDescription, setShowFullDescription] = useState(false)
-  const supabase = createClient()
-
-  async function toggleFavorite() {
-    if (!userId) return
-    const previous = isFavorite
-    setIsFavorite(!previous)
-    setSaving(true)
-    try {
-      if (previous) {
-        const { error } = await supabase
-          .from('favorites')
-          .delete()
-          .eq('user_id', userId)
-          .eq('issue_id', issue.id)
-        if (error) throw error
-      } else {
-        const { error } = await supabase.from('favorites').insert({
-          user_id: userId,
-          issue_id: issue.id,
-          issue_title: issue.name || `#${issue.issue_number}`,
-          issue_thumbnail: issue.image.medium_url,
-        })
-        if (error) throw error
-      }
-    } catch {
-      setIsFavorite(previous)
-    } finally {
-      setSaving(false)
-    }
-  }
 
   const issueTitle = issue.name || `#${issue.issue_number}`
   const descNeedsTruncation =

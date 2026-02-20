@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import IssueDetail from './IssueDetail'
 
@@ -41,60 +41,45 @@ function makeChain(result: object) {
     eq: vi.fn().mockReturnThis(),
     delete: vi.fn().mockReturnThis(),
     insert: vi.fn().mockResolvedValue({ error: null }),
+    order: vi.fn().mockResolvedValue(result),
     maybeSingle: vi.fn().mockResolvedValue(result),
   }
   return chain
 }
 
-describe('IssueDetail — favorites', () => {
+describe('IssueDetail — collections', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('shows Add to Favorites when not a favorite', () => {
-    render(<IssueDetail issue={testIssue} userId="user-1" initialIsFavorite={false} />)
-    expect(screen.getByRole('button', { name: /issue\.addFavorite/i })).toBeInTheDocument()
-  })
-
-  it('shows In Favorites when already a favorite', () => {
-    render(<IssueDetail issue={testIssue} userId="user-1" initialIsFavorite={true} />)
-    expect(screen.getByRole('button', { name: /issue\.inFavorites/i })).toBeInTheDocument()
+  it('shows Add to Collection button when user is logged in', () => {
+    render(<IssueDetail issue={testIssue} userId="user-1" />)
+    expect(screen.getByRole('button', { name: /collections\.addTo/i })).toBeInTheDocument()
   })
 
   it('shows login prompt when user is not logged in', () => {
-    render(<IssueDetail issue={testIssue} userId={null} initialIsFavorite={false} />)
+    render(<IssueDetail issue={testIssue} userId={null} />)
     expect(screen.getByText(/issue\.loginPrompt/i)).toBeInTheDocument()
   })
 
-  it('calls insert when Add to Favorites is clicked', async () => {
-    const chain = makeChain({ data: null })
-    mockFrom.mockReturnValue(chain)
-
-    render(<IssueDetail issue={testIssue} userId="user-1" initialIsFavorite={false} />)
-    await userEvent.click(screen.getByRole('button', { name: /issue\.addFavorite/i }))
-
-    await waitFor(() => {
-      expect(chain.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ issue_id: 9999 })
-      )
-    })
+  it('does not show Add to Collection when user is not logged in', () => {
+    render(<IssueDetail issue={testIssue} userId={null} />)
+    expect(screen.queryByRole('button', { name: /collections\.addTo/i })).not.toBeInTheDocument()
   })
 
-  it('rolls back on delete error', async () => {
-    const deleteChain = {
-      delete: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          eq: vi.fn().mockRejectedValue(new Error('DB error')),
-        }),
-      }),
-    }
-    mockFrom.mockReturnValue(deleteChain)
+  it('opens collection list when Add to Collection is clicked', async () => {
+    const chain = makeChain({ data: [] })
+    mockFrom.mockReturnValue(chain)
 
-    render(<IssueDetail issue={testIssue} userId="user-1" initialIsFavorite={true} />)
-    await userEvent.click(screen.getByRole('button', { name: /issue\.inFavorites/i }))
+    render(<IssueDetail issue={testIssue} userId="user-1" />)
+    await userEvent.click(screen.getByRole('button', { name: /collections\.addTo/i }))
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /issue\.inFavorites/i })).toBeInTheDocument()
-    })
+    expect(screen.getByText(/collections\.title/i)).toBeInTheDocument()
+  })
+
+  it('renders issue title and metadata', () => {
+    render(<IssueDetail issue={testIssue} userId="user-1" />)
+    expect(screen.getByRole('heading', { name: 'Amazing Fantasy' })).toBeInTheDocument()
+    expect(screen.getByText(/1962-08-01/)).toBeInTheDocument()
   })
 })

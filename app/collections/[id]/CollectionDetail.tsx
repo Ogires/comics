@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
-import { createBrowserClient } from '@supabase/ssr'
-import { CollectionWithProgress, ReadingStatus } from '@/types'
+import { createClient } from '@/lib/supabase/client'
+import { CollectionWithProgress, CollectionItem, ReadingStatus } from '@/types'
 import { updateReadingStatus, updateOwnedStatus, removeItemFromCollection, deleteCollection } from '@/lib/collections'
 import ProgressBar from '@/components/ProgressBar'
 import ReadingStatusBadge from '@/components/ReadingStatusBadge'
 import OwnedBadge from '@/components/OwnedBadge'
+import AddIssueSearch from '@/components/AddIssueSearch'
 import { Button } from '@/components/ui/button'
 
 interface Props {
@@ -21,68 +22,68 @@ export default function CollectionDetail({ collection: initialCollection }: Prop
   const router = useRouter()
   const [collection, setCollection] = useState(initialCollection)
   const [isDeleting, setIsDeleting] = useState(false)
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = useMemo(() => createClient(), [])
 
   const handleStatusChange = async (itemId: string, newStatus: ReadingStatus) => {
-    // Optimistic update
-    const previousItems = [...collection.items]
-    const updatedItems = collection.items.map(item => 
-      item.id === itemId ? { ...item, reading_status: newStatus } : item
-    )
-    
-    const readItems = updatedItems.filter(i => i.reading_status === 'read').length
-    
-    setCollection({
-      ...collection,
-      items: updatedItems,
-      read_items: readItems
+    setCollection(prev => {
+      const updatedItems = prev.items.map(item =>
+        item.id === itemId ? { ...item, reading_status: newStatus } : item
+      )
+      return {
+        ...prev,
+        items: updatedItems,
+        read_items: updatedItems.filter(i => i.reading_status === 'read').length,
+      }
     })
 
     const { error } = await updateReadingStatus(supabase, itemId, newStatus)
     if (error) {
       console.error('Failed to update status', error)
-      // Revert on error
-      setCollection({ ...collection, items: previousItems })
+      setCollection(prev => {
+        const revertedItems = prev.items.map(item =>
+          item.id === itemId ? { ...item, reading_status: item.reading_status } : item
+        )
+        return { ...prev, items: revertedItems }
+      })
+      router.refresh()
     }
   }
 
   const handleOwnedChange = async (itemId: string, newOwned: boolean) => {
-    // Optimistic update
-    const previousItems = [...collection.items]
-    const updatedItems = collection.items.map(item => 
-      item.id === itemId ? { ...item, owned: newOwned } : item
-    )
-    
-    const ownedItems = updatedItems.filter(i => i.owned).length
-    
-    setCollection({
-      ...collection,
-      items: updatedItems,
-      owned_items: ownedItems
+    setCollection(prev => {
+      const updatedItems = prev.items.map(item =>
+        item.id === itemId ? { ...item, owned: newOwned } : item
+      )
+      return {
+        ...prev,
+        items: updatedItems,
+        owned_items: updatedItems.filter(i => i.owned).length,
+      }
     })
 
     const { error } = await updateOwnedStatus(supabase, itemId, newOwned)
     if (error) {
       console.error('Failed to update owned status', error)
-      // Revert on error
-      setCollection({ ...collection, items: previousItems })
+      router.refresh()
     }
   }
 
   const handleRemove = async (itemId: string) => {
-    const { error } = await removeItemFromCollection(supabase, itemId)
-    if (!error) {
-      const updatedItems = collection.items.filter(item => item.id !== itemId)
-      setCollection({
-        ...collection,
+    // Optimistic remove
+    setCollection(prev => {
+      const updatedItems = prev.items.filter(item => item.id !== itemId)
+      return {
+        ...prev,
         items: updatedItems,
         total_items: updatedItems.length,
         read_items: updatedItems.filter(i => i.reading_status === 'read').length,
         owned_items: updatedItems.filter(i => i.owned).length,
-      })
+      }
+    })
+
+    const { error } = await removeItemFromCollection(supabase, itemId)
+    if (error) {
+      console.error('Failed to remove item', error)
       router.refresh()
     }
   }
@@ -100,6 +101,30 @@ export default function CollectionDetail({ collection: initialCollection }: Prop
     }
   }
 
+  const handleIssueAdded = (issueId: number, title: string, thumbnail: string) => {
+    const newItem: CollectionItem = {
+      id: `temp-${issueId}`,
+      collection_id: collection.id,
+      issue_id: issueId,
+      issue_title: title,
+      issue_thumbnail: thumbnail,
+      reading_status: 'pending',
+      owned: false,
+      added_at: new Date().toISOString(),
+    }
+    setCollection(prev => ({
+      ...prev,
+      items: [...prev.items, newItem],
+      total_items: prev.total_items + 1,
+    }))
+    router.refresh()
+  }
+
+  const existingIssueIds = useMemo(
+    () => collection.items.map((item) => item.issue_id),
+    [collection.items]
+  )
+
   const percentage = collection.total_items > 0
     ? Math.round((collection.read_items / collection.total_items) * 100)
     : 0
@@ -109,23 +134,31 @@ export default function CollectionDetail({ collection: initialCollection }: Prop
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-card p-6 border rounded-lg shadow-sm">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">{collection.name}</h1>
-          {collection.description && (
+          {collection.description ? (
             <p className="text-muted-foreground">{collection.description}</p>
-          )}
+          ) : null}
           <div className="text-sm font-medium pt-2">
             {t('collections.issuesCount', { count: collection.total_items })}
           </div>
         </div>
         <div className="flex gap-2">
-          {/* Edit button could be added here */}
-          <Button 
-            variant="destructive" 
+          <Button
+            variant="destructive"
             onClick={handleDeleteCollection}
             disabled={isDeleting}
           >
             {isDeleting ? t('common.loading') : t('collections.delete')}
           </Button>
         </div>
+      </div>
+
+      <div className="bg-card p-6 border rounded-lg shadow-sm space-y-2">
+        <h2 className="text-sm font-medium text-muted-foreground mb-2">{t('collections.addIssue')}</h2>
+        <AddIssueSearch
+          collectionId={collection.id}
+          existingIssueIds={existingIssueIds}
+          onIssueAdded={handleIssueAdded}
+        />
       </div>
 
       <div className="bg-card p-6 border rounded-lg shadow-sm space-y-2">
@@ -140,7 +173,7 @@ export default function CollectionDetail({ collection: initialCollection }: Prop
         <div className="flex flex-col items-center justify-center py-20 px-4 text-center border rounded-lg bg-card/50 text-muted-foreground min-h-[300px]">
           <p className="text-lg mb-4">{t('collections.noIssues')}</p>
           <Link href="/">
-            <Button>{t('nav.home') || 'Go to search'}</Button>
+            <Button>{t('nav.home')}</Button>
           </Link>
         </div>
       ) : (
@@ -167,19 +200,19 @@ export default function CollectionDetail({ collection: initialCollection }: Prop
                   {item.issue_title || `Issue #${item.issue_id}`}
                 </Link>
                 <div className="flex flex-wrap gap-2">
-                  <ReadingStatusBadge 
-                    status={item.reading_status} 
-                    onChange={(newStatus) => handleStatusChange(item.id, newStatus)} 
+                  <ReadingStatusBadge
+                    status={item.reading_status}
+                    onChange={(newStatus) => handleStatusChange(item.id, newStatus)}
                   />
-                  <OwnedBadge 
-                    owned={item.owned} 
-                    onChange={(newOwned) => handleOwnedChange(item.id, newOwned)} 
+                  <OwnedBadge
+                    owned={item.owned}
+                    onChange={(newOwned) => handleOwnedChange(item.id, newOwned)}
                   />
                 </div>
                 <div className="mt-auto">
-                  <button 
+                  <button
                     onClick={() => handleRemove(item.id)}
-                    className="text-xs text-destructive hover:underline hidden group-hover:block"
+                    className="text-xs text-destructive hover:underline hidden group-hover:block group-focus-within:block"
                   >
                     {t('collections.removeFrom')}
                   </button>

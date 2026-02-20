@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/lib/supabase/client'
 import { addItemToCollection, removeItemFromCollection, createCollection, getUserCollections } from '@/lib/collections'
 import { Button } from '@/components/ui/button'
 
@@ -22,10 +22,7 @@ export default function AddToCollectionModal({ userId, issueId, issueTitle, issu
   const [newColName, setNewColName] = useState('')
   const [creating, setCreating] = useState(false)
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = createClient()
 
   const fetchCollections = async () => {
     setLoading(true)

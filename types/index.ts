@@ -33,6 +33,7 @@ export interface IssueSummary {
   name: string
   issue_number: string
   image: ComicVineImage
+  volume?: { name: string }
 }
 
 export interface Issue extends IssueSummary {
