@@ -82,6 +82,12 @@ export const es = {
     errorGeneric: 'Error de autenticaci\u00f3n. Int\u00e9ntalo de nuevo.',
     switchToRegister: '\u00bfNo tienes cuenta? Reg\u00edstrate',
     switchToSignIn: '\u00bfYa tienes cuenta? Inicia sesi\u00f3n',
+    passwordRequirements: 'La contrase\u00f1a debe contener:',
+    ruleMinLength: 'Al menos 8 caracteres',
+    ruleUppercase: 'Al menos una letra may\u00fascula',
+    ruleLowercase: 'Al menos una letra min\u00fascula',
+    ruleDigit: 'Al menos un d\u00edgito',
+    ruleSpecialChar: 'Al menos un car\u00e1cter especial',
   },
   error: {
     title: 'Algo sali\u00f3 mal',

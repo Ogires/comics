@@ -82,6 +82,12 @@ export const en = {
     errorGeneric: 'Authentication error. Please try again.',
     switchToRegister: "Don't have an account? Register",
     switchToSignIn: 'Already have an account? Sign In',
+    passwordRequirements: 'Password must contain:',
+    ruleMinLength: 'At least 8 characters',
+    ruleUppercase: 'At least one uppercase letter',
+    ruleLowercase: 'At least one lowercase letter',
+    ruleDigit: 'At least one digit',
+    ruleSpecialChar: 'At least one special character',
   },
   error: {
     title: 'Something went wrong',
