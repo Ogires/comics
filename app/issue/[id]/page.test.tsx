@@ -11,6 +11,11 @@ vi.mock('next/image', () => ({
   },
 }))
 
+// Mock next/navigation (needed by BackButton)
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ back: vi.fn(), push: vi.fn() }),
+}))
+
 // Mock supabase
 const mockFrom = vi.fn()
 vi.mock('@/lib/supabase/client', () => ({

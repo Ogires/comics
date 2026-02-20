@@ -4,6 +4,9 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
+import BackButton from '@/components/BackButton'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import type { Character } from '@/types'
 
 const ISSUE_LIMIT = 50
@@ -15,6 +18,14 @@ export default function CharacterDetail({ character }: { character: Character })
 
   return (
     <div>
+      <div className="flex items-center gap-2 mb-4">
+        <BackButton />
+        <Breadcrumbs items={[
+          { label: 'Home', href: '/' },
+          { label: character.name },
+        ]} />
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-6 mb-8">
         <div className="relative w-48 h-48 shrink-0">
           <Image
@@ -50,12 +61,13 @@ export default function CharacterDetail({ character }: { character: Character })
             ))}
           </div>
           {!showAll && character.issue_credits.length > ISSUE_LIMIT && (
-            <button
+            <Button
+              variant="link"
               onClick={() => setShowAll(true)}
-              className="mt-3 text-sm text-red-400 hover:underline"
+              className="mt-3 text-sm text-red-400"
             >
               Show all {character.issue_credits.length} issues
-            </button>
+            </Button>
           )}
         </>
       )}

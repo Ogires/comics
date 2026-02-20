@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Navbar from '@/components/Navbar'
+import SkipLink from '@/components/SkipLink'
 import I18nProvider from '@/components/I18nProvider'
 
 export const metadata: Metadata = {
@@ -15,11 +16,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className="bg-slate-950 text-slate-100 min-h-screen">
         <I18nProvider>
+          <SkipLink />
           <Navbar />
-          <main className="max-w-6xl mx-auto px-4 py-8">
+          <main id="main-content" className="max-w-6xl mx-auto px-4 py-8">
             {children}
           </main>
         </I18nProvider>

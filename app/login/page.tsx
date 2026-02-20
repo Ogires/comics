@@ -3,7 +3,12 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
+import { AlertCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function LoginPage() {
   return (
@@ -56,45 +61,53 @@ function LoginForm() {
       <h1 className="text-2xl font-bold text-slate-100 mb-6">
         {isRegister ? t('auth.register') : t('auth.signIn')}
       </h1>
-      {error && <p className="text-red-400 mb-4 text-sm">{error}</p>}
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="size-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-slate-300 text-sm mb-1">{t('auth.email')}</label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="email">{t('auth.email')}</Label>
+          <Input
+            id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full bg-slate-800 border border-slate-600 rounded px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="bg-slate-800 border-slate-600 text-slate-100 focus-visible:ring-red-500"
           />
         </div>
-        <div>
-          <label className="block text-slate-300 text-sm mb-1">{t('auth.password')}</label>
-          <input
+        <div className="space-y-2">
+          <Label htmlFor="password">{t('auth.password')}</Label>
+          <Input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full bg-slate-800 border border-slate-600 rounded px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="bg-slate-800 border-slate-600 text-slate-100 focus-visible:ring-red-500"
           />
         </div>
-        <button
+        <Button
           type="submit"
           disabled={loading}
-          className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-semibold py-2 rounded"
+          className="w-full bg-red-600 hover:bg-red-700 text-white"
         >
           {loading
             ? (isRegister ? t('auth.registering') : t('auth.signingIn'))
             : (isRegister ? t('auth.register') : t('auth.signIn'))}
-        </button>
+        </Button>
       </form>
-      <button
+      <Button
+        variant="ghost"
         onClick={() => setIsRegister((r) => !r)}
-        className="mt-4 text-sm text-slate-400 hover:text-slate-200"
+        className="mt-4 text-sm text-slate-300 hover:text-slate-100"
       >
         {isRegister ? t('auth.switchToSignIn') : t('auth.switchToRegister')}
-      </button>
+      </Button>
     </div>
   )
 }

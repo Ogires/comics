@@ -4,6 +4,8 @@ export const es = {
     signIn: 'Iniciar sesi\u00f3n',
     signOut: 'Cerrar sesi\u00f3n',
     langToggle: 'EN',
+    home: 'Inicio',
+    menu: 'Men\u00fa',
   },
   common: {
     loading: 'Cargando\u2026',
@@ -12,6 +14,9 @@ export const es = {
     results: '{{count}} resultados',
     noResults: 'Sin resultados.',
     error: 'Algo sali\u00f3 mal. Int\u00e9ntalo de nuevo.',
+    skipToContent: 'Ir al contenido',
+    back: 'Volver',
+    retry: 'Reintentar',
   },
   home: {
     title: 'Comics Explorer',
@@ -51,5 +56,14 @@ export const es = {
     errorGeneric: 'Error de autenticaci\u00f3n. Int\u00e9ntalo de nuevo.',
     switchToRegister: '\u00bfNo tienes cuenta? Reg\u00edstrate',
     switchToSignIn: '\u00bfYa tienes cuenta? Inicia sesi\u00f3n',
+  },
+  error: {
+    title: 'Algo sali\u00f3 mal',
+    description: 'Ocurri\u00f3 un error inesperado. Int\u00e9ntalo de nuevo.',
+  },
+  notFound: {
+    title: 'P\u00e1gina no encontrada',
+    description: 'La p\u00e1gina que buscas no existe.',
+    backHome: 'Volver al inicio',
   },
 }

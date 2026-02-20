@@ -5,6 +5,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/button'
+import BackButton from '@/components/BackButton'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import type { Issue } from '@/types'
 
 interface Props {
@@ -49,48 +52,55 @@ export default function IssueDetail({ issue, userId, initialIsFavorite }: Props)
   }
 
   const writer = issue.person_credits?.find((p) => p.role === 'writer')
+  const issueTitle = issue.name || `#${issue.issue_number}`
 
   return (
     <div className="max-w-2xl">
+      <div className="flex items-center gap-2 mb-4">
+        <BackButton />
+        <Breadcrumbs items={[
+          { label: 'Home', href: '/' },
+          { label: issueTitle },
+        ]} />
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-6 mb-6">
         <div className="relative w-48 shrink-0 aspect-[2/3]">
           <Image
             src={issue.image.super_url || issue.image.medium_url || '/placeholder.png'}
-            alt={issue.name || `#${issue.issue_number}`}
+            alt={issueTitle}
             fill
             sizes="192px"
             className="object-cover rounded-lg"
           />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold text-red-500">
-            {issue.name || `#${issue.issue_number}`}
-          </h1>
+          <h1 className="text-2xl font-bold text-red-500">{issueTitle}</h1>
           {issue.volume && (
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-300 text-sm">
               {t('issue.series')}: {issue.volume.name}
             </p>
           )}
           {issue.cover_date && (
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-300 text-sm">
               {t('issue.published')}: {issue.cover_date}
             </p>
           )}
           {writer && (
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-300 text-sm">
               {t('issue.writer')}: {writer.name}
             </p>
           )}
           {userId ? (
-            <button
+            <Button
               onClick={toggleFavorite}
               disabled={saving}
-              className="mt-2 px-4 py-2 rounded font-semibold disabled:opacity-50 bg-red-600 hover:bg-red-700 text-white self-start"
+              className="mt-2 self-start bg-red-600 hover:bg-red-700 text-white"
             >
               {saving ? t('issue.saving') : isFavorite ? t('issue.inFavorites') : t('issue.addFavorite')}
-            </button>
+            </Button>
           ) : (
-            <p className="text-slate-400 text-sm mt-2">
+            <p className="text-slate-300 text-sm mt-2">
               <Link href="/login" className="text-red-400 hover:underline">
                 {t('issue.loginPrompt')}
               </Link>

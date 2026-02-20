@@ -4,6 +4,8 @@ export const en = {
     signIn: 'Sign In',
     signOut: 'Sign Out',
     langToggle: 'ES',
+    home: 'Home',
+    menu: 'Menu',
   },
   common: {
     loading: 'Loading\u2026',
@@ -12,6 +14,9 @@ export const en = {
     results: '{{count}} results',
     noResults: 'No results found.',
     error: 'Something went wrong. Please try again.',
+    skipToContent: 'Skip to content',
+    back: 'Back',
+    retry: 'Try again',
   },
   home: {
     title: 'Comics Explorer',
@@ -51,5 +56,14 @@ export const en = {
     errorGeneric: 'Authentication error. Please try again.',
     switchToRegister: "Don't have an account? Register",
     switchToSignIn: 'Already have an account? Sign In',
+  },
+  error: {
+    title: 'Something went wrong',
+    description: 'An unexpected error occurred. Please try again.',
+  },
+  notFound: {
+    title: 'Page not found',
+    description: 'The page you are looking for does not exist.',
+    backHome: 'Go back home',
   },
 }

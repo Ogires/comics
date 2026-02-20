@@ -12,7 +12,7 @@ export default function FavoritesList({ favorites }: { favorites: Favorite[] }) 
     <div>
       <h1 className="text-3xl font-bold text-red-500 mb-6">{t('favorites.title')}</h1>
       {favorites.length === 0 ? (
-        <p className="text-slate-400">
+        <p className="text-slate-300">
           {t('favorites.empty')}{' '}
           <Link href="/" className="text-red-400 hover:underline">
             {t('favorites.browse')}
