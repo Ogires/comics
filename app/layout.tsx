@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   title: 'Comics Explorer',
   description: 'Discover comics characters and issues',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export const viewport: Viewport = {
