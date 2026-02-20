@@ -160,6 +160,30 @@ export default function IssueDetail({ issue, userId, initialIsFavorite }: Props)
         </>
       )}
 
+      {/* Description */}
+      {issue.description && (
+        <>
+          <Separator className="my-6" />
+          <section>
+            <h2 className="text-lg font-semibold text-slate-100 mb-3">
+              {t('issue.description')}
+            </h2>
+            <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+              {displayedDescription}
+            </p>
+            {descNeedsTruncation && (
+              <Button
+                variant="link"
+                onClick={() => setShowFullDescription(!showFullDescription)}
+                className="mt-1 p-0 h-auto text-sm text-red-400"
+              >
+                {showFullDescription ? t('issue.readLess') : t('issue.readMore')}
+              </Button>
+            )}
+          </section>
+        </>
+      )}
+
       {/* Characters */}
       {issue.character_credits && issue.character_credits.length > 0 && (
         <>
@@ -298,29 +322,6 @@ export default function IssueDetail({ issue, userId, initialIsFavorite }: Props)
         </>
       )}
 
-      {/* Description */}
-      {issue.description && (
-        <>
-          <Separator className="my-6" />
-          <section>
-            <h2 className="text-lg font-semibold text-slate-100 mb-3">
-              {t('issue.description')}
-            </h2>
-            <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
-              {displayedDescription}
-            </p>
-            {descNeedsTruncation && (
-              <Button
-                variant="link"
-                onClick={() => setShowFullDescription(!showFullDescription)}
-                className="mt-1 p-0 h-auto text-sm text-red-400"
-              >
-                {showFullDescription ? t('issue.readLess') : t('issue.readMore')}
-              </Button>
-            )}
-          </section>
-        </>
-      )}
     </div>
   )
 }
